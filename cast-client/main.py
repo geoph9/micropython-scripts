@@ -11,12 +11,13 @@ mappings = {
 	"D1": 5, "D2": 4, "D3": 0, "D4": 2, "D5": 14, "D6": 12,
 	"D7": 13, "D8": 15 
 }
-red_led = Pin(mappings["D3"], "red_led", Pin.OUT)
-yellow_led = Pin(mappings["D4"], "yellow_led", Pin.OUT)
 
-play_pause_button = Pin(mappings["D2"], "play_pause", Pin.IN)
-ffwd_button = Pin(mappings["D1"], "ffwd", Pin.IN)
-rewind_button = Pin(mappings["D5"], "rewind", Pin.IN)
+red_led = Pin(mappings["D3"], Pin.OUT)
+yellow_led = Pin(mappings["D4"], Pin.OUT)
+
+play_pause_button = Pin(mappings["D2"], Pin.IN, Pin.PULL_UP)
+ffwd_button = Pin(mappings["D1"], Pin.IN, Pin.PULL_UP)
+rewind_button = Pin(mappings["D5"], Pin.IN, Pin.PULL_UP)
 
 def read_config(path):
 	f = open(path, 'r')  # TODO: utf-8?
@@ -45,8 +46,8 @@ def send_post(url):
 #		https://docs.micropython.org/en/latest/esp8266/tutorial/powerctrl.html#deep-sleep-mode
 
 class Caster:
-	def __init__(self, config_path="./config.json", deep_sleep_timeout=1000):
-		self.deep_sleep_timeout = deep_sleep_timeout
+	def __init__(self, config_path="./config.json", deepsleep_timeout=1000):
+		self.deepsleep_timeout = deepsleep_timeout
 		self.current_volume = -1
 		# Read config
 		self.config = read_config(config_path)
@@ -108,8 +109,10 @@ class Caster:
 				#		so that we will be aple to either hit/play or /pause)
 				time.sleep(0.05)  # repeat every 50 ms
 			except:
+				print("Something wrong happened while looping...\nGoing to sleep.")
 				self._deep_sleep()
 
-caster = Caster()
 
+# Start caster
+caster = Caster()
 caster.loop()

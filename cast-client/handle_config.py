@@ -50,6 +50,7 @@ class ButtonEvent():
 		self.url = "{}/{}?uuid={}".format(base_url, action, uuid)
 		for key, val in kwargs.items():
 			self.url += "&{}={}".format(key, val)
+		self.current_value = pin.value()
 
 	def _send_req(self):
 		try:
@@ -61,7 +62,7 @@ class ButtonEvent():
 		return False
 
 	def check(self):
-		if not pin.value():
+		if pin.value() != self.current_value:
 			return self._send_req()
 		return False
 
