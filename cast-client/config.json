@@ -1,15 +1,12 @@
 {
-	"server": {
-		"base_url": "",
-		"data": {
-			// e.g. json data to send with POST request.
-		},
-		// TODO
-		// If you have query parameters then add them here
-		"endpoints": []
-	},
-	"wifi": {
-		"ssid": "",
-		"pwd": ""
-	}
+    "server": {
+        "base_url": "",
+        "data": {},
+        // TODO: If you have query parameters then add them here
+        "endpoints": []
+    },
+    "wifi": {
+        "ssid": "",
+        "pwd": ""
+    }
 }
