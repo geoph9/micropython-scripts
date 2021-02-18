@@ -73,6 +73,8 @@ class Caster:
             ButtonEvent(rewind_button, self.config['server']['base_url'],
                         action='rewind', uuid=self.connector.uuid,
                         seconds=10),
+            ButtonEvent(play_pause_button, self.config['server']['base_url'],
+                        action='pause', uuid=self.connector.uuid, play_pause=True)
         ]
 
     def do_connect(self):
@@ -114,8 +116,8 @@ class Caster:
         print("Waiting for requests...")
         while True:
             try:
-                for button in self.button_events:
-                    button.check()
+                # for button in self.button_events:
+                #     button.check()
                 self._handle_volume()
                 # TODO: Handle play/pause (the difficulty is that we need to know the current state
                 #       so that we will be able to either hit/play or /pause)
