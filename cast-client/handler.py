@@ -86,18 +86,18 @@ class ButtonEvent:
 
 	def send_req(self, _):
 		# Avoid consecutive requests
-		if time.time() - self.current_time <= 1:  # allow only one request per second
+		if time.time() - self.current_time <= 2:  # allow only one request per 2 seconds
 			self.current_time = time.time()
-			return True
+			return
 		print("Sending request to: ", self.url)
 		try:
 			resp = urequests.post(self.url)
 		except Exception as e:
 			print("Exception while handling button event:", e)
-			return False
+			return
 		if resp.status_code == 200:
-			return True
-		return False
+			return
+		return
 
 	def check(self):
 		if self.pin.value() != self.current_value:
@@ -115,10 +115,10 @@ class ButtonEvent:
 				try:
 					new_action = player_state_to_action[r.json().get("player_state")]
 					self.url = re.sub("status", new_action, url)
-					return self.send_req(_)
+					self.send_req(_)
 				except KeyError as e:
 					print("KeyError:", e)
 		except Exception as e:
 			print("Exception in _get_devices:", e)
-		return False
+		return
 
