@@ -13,7 +13,7 @@ mappings = {
     "D7": 13, "D8": 15
 }
 
-red_led = Pin(mappings["D3"], Pin.OUT)
+red_led = Pin(mappings["D6"], Pin.OUT)
 yellow_led = Pin(mappings["D4"], Pin.OUT)
 
 play_pause_button = Pin(mappings["D2"], Pin.IN, Pin.PULL_UP)
@@ -72,10 +72,11 @@ class Caster:
                         seconds=10),
             ButtonEvent(rewind_button, self.config['server']['base_url'],
                         action='rewind', uuid=self.connector.uuid,
-                        seconds=10),
-            ButtonEvent(play_pause_button, self.config['server']['base_url'],
-                        action='pause', uuid=self.connector.uuid, play_pause=True)
+                        seconds=10)
         ]
+        self.play_pause_event = ButtonEvent(play_pause_button, self.config['server']['base_url'],
+                                            action='pause', uuid=self.connector.uuid, play_pause=True,
+                                            playing_led_pin=yellow_led, paused_led_pin=red_led)
 
     def do_connect(self):
         import network
@@ -116,12 +117,13 @@ class Caster:
         print("Waiting for requests...")
         while True:
             try:
-                # for button in self.button_events:
-                #     button.check()
+                for button in self.button_events:
+                    button.check()
                 self._handle_volume()
+                self.play_pause_event.check_update()
                 # TODO: Handle play/pause (the difficulty is that we need to know the current state
                 #       so that we will be able to either hit/play or /pause)
-                time.sleep(0.05)  # repeat every 50 ms
+                time.sleep(0.01)  # repeat every 50 ms
             except Exception as e:
                 print("Something wrong happened while looping:", e)
                 self._deep_sleep()
