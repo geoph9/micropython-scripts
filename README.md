@@ -49,3 +49,14 @@ A class named `Caster` is responsible for all the above. For convenience, I am a
 
 By initializing a `Caster` instance we are connecting to the network and the chromecast. Then, the only thing left to 
 do is loop for eternity and wait for button requests.
+
+### Chromecast: No Middleman
+
+The above implementation depends fully on `go-chromecast`. That means that an http server has to be ran in another 
+device. This is an overhead since you need a device always on and also each request you make is doing 2 hops instead of 1 
+(request to http-server -> request to chromecast).
+
+In order to avoid this, I copied the code from the [`CastVolumeKnob`](https://github.com/WebmasterTD/CastVolumeKnob) 
+repository. In the [`cast-no-middleman`](/cast-no-middleman) directory, you can find an adjusted implementation which 
+communicates directly with the chromecast. I have made some tweaks to the code in order to make it more suitable for my case.
+
